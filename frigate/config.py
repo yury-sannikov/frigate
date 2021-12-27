@@ -13,8 +13,7 @@ from pydantic import BaseModel, Extra, Field, validator, root_validator
 from pydantic.fields import PrivateAttr
 
 from frigate.const import BASE_DIR, CACHE_DIR, YAML_EXT
-from frigate.edgetpu import load_labels
-from frigate.util import create_mask, deep_merge
+from frigate.util import create_mask, deep_merge, load_labels
 
 logger = logging.getLogger(__name__)
 
@@ -865,7 +864,7 @@ class FrigateConfig(FrigateBaseModel):
     )
 
     @property
-    def runtime_config(self):
+    def runtime_config(self) -> FrigateConfig:
         """Merge camera config with globals."""
         config = self.copy(deep=True)
 
