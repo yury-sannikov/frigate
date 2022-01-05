@@ -48,10 +48,10 @@ aarch64_frigate: version web
 aarch64_all: aarch64_wheels aarch64_ffmpeg aarch64_frigate
 
 aarch64_tests:
-	docker build --tag frigate-base --build-arg ARCH=aarch64 --build-arg WHEELS_VERSION=1.0.3 --file docker/Dockerfile.unittest .
+	docker build --build-arg ARCH=aarch64 --build-arg WHEELS_VERSION=1.0.3 --file docker/Dockerfile.unittest .
 
 amd64_tests:
-	docker build --tag frigate-base --build-arg ARCH=amd64 --build-arg WHEELS_VERSION=1.0.3 --file docker/Dockerfile.unittest .
+	docker build --build-arg ARCH=amd64 --build-arg WHEELS_VERSION=1.0.3 --file docker/Dockerfile.unittest .
 
 armv7_wheels:
 	docker build --tag blakeblackshear/frigate-wheels:1.0.3-armv7 --file docker/Dockerfile.wheels .
