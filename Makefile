@@ -48,6 +48,8 @@ aarch64_frigate: version web
 aarch64_all: aarch64_wheels aarch64_ffmpeg aarch64_frigate
 
 multiplatform_tests:
+	wget -q https://github.com/google-coral/test_data/raw/release-frogfish/ssdlite_mobiledet_coco_qat_postprocess_edgetpu.tflite -O ./edgetpu_model.tflite
+	wget -q https://github.com/google-coral/test_data/raw/release-frogfish/ssdlite_mobiledet_coco_qat_postprocess.tflite -O ./cpu_model.tflite
 	docker buildx build --platform=linux/arm64/v8 --build-arg ARCH=aarch64 --build-arg WHEELS_VERSION=1.0.3 --file docker/Dockerfile.unittest .
 	docker buildx build --platform=linux/amd64 --build-arg ARCH=amd64 --build-arg WHEELS_VERSION=1.0.3 --file docker/Dockerfile.unittest .
 	docker buildx build --platform linux/arm/v7 --build-arg ARCH=armv7 --build-arg WHEELS_VERSION=1.0.3 --file docker/Dockerfile.unittest .

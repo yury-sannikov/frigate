@@ -29,8 +29,8 @@ RUN pip3 install \
 
 # get model and labels
 COPY labelmap.txt /labelmap.txt
-RUN wget -q https://github.com/google-coral/test_data/raw/release-frogfish/ssdlite_mobiledet_coco_qat_postprocess_edgetpu.tflite -O /edgetpu_model.tflite
-RUN wget -q https://github.com/google-coral/test_data/raw/release-frogfish/ssdlite_mobiledet_coco_qat_postprocess.tflite -O /cpu_model.tflite
+COPY edgetpu_model.tflite /edgetpu_model.tflite
+COPY cpu_model.tflite /cpu_model.tflite
 
 WORKDIR /opt/frigate/
 ADD frigate frigate/
