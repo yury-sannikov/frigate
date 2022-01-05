@@ -63,6 +63,6 @@ armv7_frigate: version web
 	docker build --no-cache --tag frigate-base --build-arg ARCH=armv7 --build-arg FFMPEG_VERSION=1.0.0 --build-arg WHEELS_VERSION=1.0.3 --build-arg NGINX_VERSION=1.0.2 --file docker/Dockerfile.base .
 	docker build --no-cache --tag frigate --file docker/Dockerfile.armv7 .
 
-armv7_all: armv7_wheels armv7_ffmpeg armv7_frigate aarch64_test
+armv7_all: armv7_wheels armv7_ffmpeg armv7_frigate aarch64_test amd64_tests
 
 .PHONY: web
