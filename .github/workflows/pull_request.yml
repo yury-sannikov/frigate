@@ -78,4 +78,4 @@ jobs:
       #     username: ${{ secrets.DOCKERHUB_USERNAME }}
       #     password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Build and run tests
-        run: make amd64_tests
+        run: docker build --build-arg ARCH=amd64 --build-arg WHEELS_VERSION=1.0.3 --file docker/Dockerfile.unittest .
