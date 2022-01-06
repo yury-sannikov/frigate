@@ -1,6 +1,7 @@
 default_target: amd64_frigate
 
 COMMIT_HASH := $(shell git log -1 --pretty=format:"%h"|tail -1)
+WHEELS_VERSION := 1.0.3
 
 version:
 	echo "VERSION='0.10.0-$(COMMIT_HASH)'" > frigate/version.py
@@ -50,9 +51,13 @@ aarch64_all: aarch64_wheels aarch64_ffmpeg aarch64_frigate
 multiplatform_tests:
 	wget -q https://github.com/google-coral/test_data/raw/release-frogfish/ssdlite_mobiledet_coco_qat_postprocess_edgetpu.tflite -O ./edgetpu_model.tflite
 	wget -q https://github.com/google-coral/test_data/raw/release-frogfish/ssdlite_mobiledet_coco_qat_postprocess.tflite -O ./cpu_model.tflite
-	docker buildx build --platform=linux/arm64/v8 --build-arg ARCH=aarch64 --build-arg WHEELS_VERSION=1.0.3 --file docker/Dockerfile.unittest .
-	docker buildx build --platform=linux/amd64 --build-arg ARCH=amd64 --build-arg WHEELS_VERSION=1.0.3 --file docker/Dockerfile.unittest .
-	docker buildx build --platform linux/arm/v7 --build-arg ARCH=armv7 --build-arg WHEELS_VERSION=1.0.3 --file docker/Dockerfile.unittest .
+	@IFS=','; for i in arm64,aarch64 amd64,amd64 arm,armv7; \
+		do set -- $$i; \
+		docker pull blakeblackshear/frigate-wheels:$(WHEELS_VERSION)-$$2; \
+		docker tag blakeblackshear/frigate-wheels:$(WHEELS_VERSION)-$$2 blakeblackshear/frigate-wheels:$(WHEELS_VERSION)-$$1; \
+		done;
+	docker buildx build --platform=linux/arm64/v8,linux/amd64 --build-arg WHEELS_VERSION=$(WHEELS_VERSION) --file docker/Dockerfile.unittest .
+	# --platform linux/arm/v7
 
 armv7_wheels:
 	docker build --tag blakeblackshear/frigate-wheels:1.0.3-armv7 --file docker/Dockerfile.wheels .

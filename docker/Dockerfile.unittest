@@ -1,6 +1,6 @@
-ARG ARCH=amd64
+ARG TARGETARCH
 ARG WHEELS_VERSION
-FROM blakeblackshear/frigate-wheels:${WHEELS_VERSION}-${ARCH} as wheels
+FROM blakeblackshear/frigate-wheels:${WHEELS_VERSION}-${TARGETARCH} as wheels
 
 FROM ubuntu:20.04
 LABEL maintainer "blakeb@blakeshome.com"
