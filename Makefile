@@ -48,16 +48,10 @@ aarch64_frigate: version web
 
 aarch64_all: aarch64_wheels aarch64_ffmpeg aarch64_frigate
 
-multiplatform_tests:
-	wget -q https://github.com/google-coral/test_data/raw/release-frogfish/ssdlite_mobiledet_coco_qat_postprocess_edgetpu.tflite -O ./edgetpu_model.tflite
-	wget -q https://github.com/google-coral/test_data/raw/release-frogfish/ssdlite_mobiledet_coco_qat_postprocess.tflite -O ./cpu_model.tflite
-	@IFS=','; for i in arm64,aarch64 amd64,amd64 arm,armv7; \
-		do set -- $$i; \
-		docker pull blakeblackshear/frigate-wheels:$(WHEELS_VERSION)-$$2; \
-		docker tag blakeblackshear/frigate-wheels:$(WHEELS_VERSION)-$$2  docker.io/blakeblackshear/frigate-wheels:$(WHEELS_VERSION)-$$1; \
-		done;
-	docker buildx build --platform=linux/arm64/v8,linux/amd64 --build-arg WHEELS_VERSION=$(WHEELS_VERSION) --file docker/Dockerfile.unittest .
-	# --platform linux/arm/v7
+run_tests:
+	# PLATFORM: linux/arm64/v8 linux/amd64 or linux/arm/v7
+	# ARCH: aarch64 amd64 or armv7
+	docker buildx build --platform=$(PLATFORM) --build-arg ARCH=$(ARCH) --build-arg WHEELS_VERSION=$(WHEELS_VERSION) --file docker/Dockerfile.unittest .
 
 armv7_wheels:
 	docker build --tag blakeblackshear/frigate-wheels:1.0.3-armv7 --file docker/Dockerfile.wheels .
