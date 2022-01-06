@@ -50,14 +50,13 @@ aarch64_all: aarch64_wheels aarch64_ffmpeg aarch64_frigate
 run_tests:
 	# PLATFORM: linux/arm64/v8 linux/amd64 or linux/arm/v7
 	# ARCH: aarch64 amd64 or armv7
-	@cp docker/Dockerfile.base docker/Dockerfile.test
-	@cp docker/Dockerfile.$(ARCH) docker/Dockerfile.$(ARCH).test
+	@cat docker/Dockerfile.base docker/Dockerfile.$(ARCH) > docker/Dockerfile.test
 	@sed -i "s/FROM frigate-web as web/#/g" docker/Dockerfile.test
 	@sed -i "s/COPY --from=web \/opt\/frigate\/build web\//#/g" docker/Dockerfile.test
-	@echo "RUN python3 -m unittest" >> docker/Dockerfile.$(ARCH).test
-	@docker buildx build --tag frigate-base --platform=$(PLATFORM) --build-arg NGINX_VERSION=1.0.2 --build-arg FFMPEG_VERSION=1.0.0 --build-arg ARCH=$(ARCH) --build-arg WHEELS_VERSION=1.0.3 --file docker/Dockerfile.test .
-	@docker buildx build --platform=$(PLATFORM) --file docker/Dockerfile.$(ARCH).test .
-	@rm docker/Dockerfile.$(ARCH).test docker/Dockerfile.test
+	@sed -i "s/FROM frigate-base/#/g" docker/Dockerfile.test
+	@echo "RUN python3 -m unittest" >> docker/Dockerfile.test
+	@docker buildx build --platform=$(PLATFORM) --tag frigate-base --build-arg NGINX_VERSION=1.0.2 --build-arg FFMPEG_VERSION=1.0.0 --build-arg ARCH=$(ARCH) --build-arg WHEELS_VERSION=1.0.3 --file docker/Dockerfile.test .
+	@rm docker/Dockerfile.test
 
 armv7_wheels:
 	docker build --tag blakeblackshear/frigate-wheels:1.0.3-armv7 --file docker/Dockerfile.wheels .
