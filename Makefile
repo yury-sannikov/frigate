@@ -54,7 +54,7 @@ multiplatform_tests:
 	@IFS=','; for i in arm64,aarch64 amd64,amd64 arm,armv7; \
 		do set -- $$i; \
 		docker pull blakeblackshear/frigate-wheels:$(WHEELS_VERSION)-$$2; \
-		docker tag blakeblackshear/frigate-wheels:$(WHEELS_VERSION)-$$2 blakeblackshear/frigate-wheels:$(WHEELS_VERSION)-$$1; \
+		docker tag blakeblackshear/frigate-wheels:$(WHEELS_VERSION)-$$2  docker.io/blakeblackshear/frigate-wheels:$(WHEELS_VERSION)-$$1; \
 		done;
 	docker buildx build --platform=linux/arm64/v8,linux/amd64 --build-arg WHEELS_VERSION=$(WHEELS_VERSION) --file docker/Dockerfile.unittest .
 	# --platform linux/arm/v7
