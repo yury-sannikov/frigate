@@ -1,4 +1,4 @@
-ARG TARGETARCH
+#ARG TARGETARCH
 ARG WHEELS_VERSION
 FROM blakeblackshear/frigate-wheels:${WHEELS_VERSION}-${TARGETARCH} as wheels
 
