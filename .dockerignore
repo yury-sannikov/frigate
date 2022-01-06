@@ -9,3 +9,4 @@ core
 *.mp4
 *.db
 *.ts
+.tox/

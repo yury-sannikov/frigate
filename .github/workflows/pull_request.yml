@@ -3,44 +3,80 @@ name: On pull request
 on: pull_request
 
 jobs:
-  web_lint:
-    name: Web - Lint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@master
-      - uses: actions/setup-node@master
-        with:
-          node-version: 14.x
-      - run: npm install
-        working-directory: ./web
-      - name: Lint
-        run: npm run lint:cmd
-        working-directory: ./web
+  # web_lint:
+  #   name: Web - Lint
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@master
+  #     - uses: actions/setup-node@master
+  #       with:
+  #         node-version: 14.x
+  #     - run: npm install
+  #       working-directory: ./web
+  #     - name: Lint
+  #       run: npm run lint:cmd
+  #       working-directory: ./web
 
-  web_build:
-    name: Web - Build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@master
-      - uses: actions/setup-node@master
-        with:
-          node-version: 14.x
-      - run: npm install
-        working-directory: ./web
-      - name: Build
-        run: npm run build
-        working-directory: ./web
+  # web_build:
+  #   name: Web - Build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@master
+  #     - uses: actions/setup-node@master
+  #       with:
+  #         node-version: 14.x
+  #     - run: npm install
+  #       working-directory: ./web
+  #     - name: Build
+  #       run: npm run build
+  #       working-directory: ./web
 
-  web_test:
-    name: Web - Test
+  # web_test:
+  #   name: Web - Test
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@master
+  #     - uses: actions/setup-node@master
+  #       with:
+  #         node-version: 14.x
+  #     - run: npm install
+  #       working-directory: ./web
+  #     - name: Test
+  #       run: npm run test
+  #       working-directory: ./web
+
+  docker_tests_on_aarch64:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
-      - uses: actions/setup-node@master
-        with:
-          node-version: 14.x
-      - run: npm install
-        working-directory: ./web
-      - name: Test
-        run: npm run test
-        working-directory: ./web
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Build and run tests
+        run: make run_tests PLATFORM="linux/arm64/v8" ARCH="aarch64"
+
+  docker_tests_on_amd64:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Build and run tests
+        run: make run_tests PLATFORM="linux/amd64" ARCH="amd64"
+
+  docker_tests_on_armv7:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Build and run tests
+        run: make run_tests PLATFORM="inux/arm/v7" ARCH="armv7"
